@@ -39,6 +39,13 @@ export class APIWrapper {
         this.pendingRequests = [];
         this.bulkRequests = [];
         this.executingRequests = [];
+
+        /**Vuex */
+        this.store = undefined;
+        /********/
+        this.uploading = false;
+        this.downloading = false;
+        this.working = false;
     }
 
     set timeout(value){
@@ -55,6 +62,12 @@ export class APIWrapper {
 
     createResponse({success = false, attempts = 0, data = {}, info = "", error = null, ...rest} = {}){
         return Object.assign({ success:success, attempts:attempts, data:data, info:info, error:error }, rest);
+    }
+
+    commit(commitType,value){
+        if(this.store){
+            this.store.commit(commitType,value);
+        }
     }
 
     /**
@@ -215,6 +228,7 @@ export class APIWrapper {
                                         },rest));
         
         this.pendingRequests.push(request);
+        this.commit('setRequestsCount',this.pendingRequests.length+this.executingRequests.length);
         
         this.executeNextRequest();
 
@@ -258,6 +272,7 @@ export class APIWrapper {
                 
                 //Added to the pending list
                 this.pendingRequests.push(request);
+                this.commit('setRequestsCount',this.pendingRequests.length+this.executingRequests.length);
             })
 
             //Parent added to the bulk list
@@ -292,6 +307,8 @@ export class APIWrapper {
         next.status = RequestObject.Status.executing;
         next.attempts++;
         this.executingRequests.push(next);
+        this.commit('setRequestsExecutingCount',this.executingRequests.length);
+        this.updateWorkingStatus();
 
         let config = Object.assign({url: this.getComputedPath(next.url)},next.config);
 
@@ -376,6 +393,8 @@ export class APIWrapper {
         if(request.isSubRequest){
             this.evaluateBulkCompletion(request.parentId);
         }
+
+        this.updateWorkingStatus();
     }
 
     evaluateBulkCompletion(requestId){
@@ -404,12 +423,49 @@ export class APIWrapper {
         }
     }
 
+    updateWorkingStatus(){
+        let uploading = false;
+        let downloading = false;
+        let working;
+
+        for(let i = 0; i < this.executingRequests.length; i++){
+            if(this.executingRequests.method == 'get'){
+                downloading = true;
+            } else {
+                uploading = true;
+            }
+
+            if(uploading && downloading){break;}
+        }
+        
+        working = uploading || downloading;
+        
+        // Commit only if the state change
+        if(this.working != working){
+            this.working = working;
+            this.commit('setWorking',this.working);
+        }
+        
+        if(!this.uploading != uploading){
+            this.uploading = uploading;
+            this.commit('setUploading',this.uploading);
+        }
+        
+        if(!this.downloading != downloading){
+            this.downloading = downloading;
+            this.commit('setDownloading',this.downloading);
+        }
+    }
+
     removeRequestFromLists(id){
         let index = this.pendingRequests.findIndex(r=>r.id == id);
         if(index >= 0){this.pendingRequests.splice(index,1);}
         
         index = this.executingRequests.findIndex(r=>r.id == id);
         if(index >= 0){this.executingRequests.splice(index,1);}
+
+        this.commit('setRequestsCount',this.pendingRequests.length+this.executingRequests.length);
+        this.commit('setRequestsExecutingCount',this.executingRequests.length);
     }
 
     setContentType(type){
