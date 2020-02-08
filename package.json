@@ -1,0 +1,25 @@
+{
+  "name": "quasar-app-extension-api-wrapper",
+  "version": "0.0.1",
+  "description": "A Quasar App Extension",
+  "author": "Roberto <roberto.langarica@gmail.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobertoLangarica/quasar-app-extension-api-wrapper"
+  },
+  "bugs": "",
+  "homepage": "",
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
