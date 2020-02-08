@@ -429,7 +429,7 @@ export class APIWrapper {
         let working;
 
         for(let i = 0; i < this.executingRequests.length; i++){
-            if(this.executingRequests.method == 'get'){
+            if(this.executingRequests[i].method == 'get'){
                 downloading = true;
             } else {
                 uploading = true;
@@ -446,12 +446,12 @@ export class APIWrapper {
             this.commit('setWorking',this.working);
         }
         
-        if(!this.uploading != uploading){
+        if(this.uploading != uploading){
             this.uploading = uploading;
             this.commit('setUploading',this.uploading);
         }
         
-        if(!this.downloading != downloading){
+        if(this.downloading != downloading){
             this.downloading = downloading;
             this.commit('setDownloading',this.downloading);
         }

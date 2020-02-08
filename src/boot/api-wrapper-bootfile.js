@@ -5,7 +5,7 @@ export default async ({ Vue, store }) => {
     api.store = (store !== undefined && store !== null) ? store:undefined;
 
     if(api.store){
-      api.store.registerModule('api-wrapper',api_state);
+      api.store.registerModule('APIwrapper',api_state);
     }
 
     Vue.prototype.$api = api;
