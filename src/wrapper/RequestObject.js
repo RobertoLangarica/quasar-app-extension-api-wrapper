@@ -8,12 +8,14 @@ export default class RequestObject {
         failed:3
     }
 
-    constructor({method = 'get',url = '',attempts = 1, params={},data = {},alias = null, continueWithFailure = false, ...rest}={}){
+    constructor({method = 'get',url = '',attempts = 1, params={},data = {},alias = null, continueWithFailure = false, onProgress = null, ...rest}={}){
         this.maxAttempts = attempts < 1 ? 1 : attempts;
         this.attempts = 0;
         this.result = {};
         this.alias = alias;
         this.continueWithFailure = continueWithFailure; //Used in bulk calls. false: The nulkCall fails with the first subrequest that fails, true: Continue until all the calls complete
+        this.onProgress = onProgress; //Used in bulk calls to report progress
+        this.progress = 0;
         /**Axios related */
         this.url = url;
         this.method = method.toLowerCase();
@@ -102,8 +104,25 @@ export default class RequestObject {
                 this.status = failed ? RequestObject.Status.failed : RequestObject.Status.completed;
             }
        }
+    }
 
+    /**
+     * Report progress in the range [0-1]
+     */
+    updateSubrequestsProgress(){
+        let completedCount = 0.0;
+        for(let i = 0; i < this.subRequests.length; i++){
+            if(this.subRequests[i].status == RequestObject.Status.failed || this.subRequests[i].status == RequestObject.Status.completed){
+                // Failed or completed
+                completedCount++;
+            }
+        }
+
+        this.progress = completedCount/this.subRequests.length;
         
+        if(this.onProgress){
+            this.onProgress(this.progress);
+        }
     }
 
     promiseResolver(resolve, reject){

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import RequestObject from './RequestObject';
 
-
 /**
  * Object retrieved with each call
  * {
@@ -90,7 +89,7 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkGet(requests = [],continueWithFailure = false){return this.bulkDecorator(requests, continueWithFailure, 'get');}
+    bulkGet(requests = [],continueWithFailure = false, onProgress = null){return this.bulkDecorator(requests, continueWithFailure, onProgress, 'get');}
 
 
     /**
@@ -114,7 +113,7 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkPost(requests = [],continueWithFailure = false){return this.bulkDecorator(requests, continueWithFailure, 'post');}
+    bulkPost(requests = [],continueWithFailure = false, onProgress = null){return this.bulkDecorator(requests, continueWithFailure, onProgress, 'post');}
     
     /**
      * 
@@ -136,7 +135,7 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkPatch(requests = [],continueWithFailure = false){return this.bulkDecorator(requests, continueWithFailure, 'patch');}
+    bulkPatch(requests = [],continueWithFailure = false, onProgress = null){return this.bulkDecorator(requests, continueWithFailure, onProgress, 'patch');}
 
     /**
      * 
@@ -158,7 +157,7 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkPut(requests = [],continueWithFailure = false){return this.bulkDecorator(requests, continueWithFailure, 'put');}
+    bulkPut(requests = [],continueWithFailure = false, onProgress = null){return this.bulkDecorator(requests, continueWithFailure, onProgress, 'put');}
 
     /**
      * 
@@ -180,7 +179,7 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkDelete(requests = [],continueWithFailure = false){return this.bulkDecorator(requests, continueWithFailure, 'delete');}
+    bulkDelete(requests = [],continueWithFailure = false, onProgress = null){return this.bulkDecorator(requests, continueWithFailure, onProgress, 'delete');}
 
     /**
      * 
@@ -189,7 +188,7 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkDecorator(requests = [], continueWithFailure = false, method){
+    bulkDecorator(requests = [], continueWithFailure = false, onProgress = null, method){
         let result = [];
         requests.forEach(request=>{
             if(typeof request === 'string'){
@@ -201,7 +200,7 @@ export class APIWrapper {
                 result.push(Object.assign(request,{method:method,url:url}));
             }
         })
-        return this.bulkCall(result, continueWithFailure);
+        return this.bulkCall(result, continueWithFailure, onProgress);
     }
 
     /**
@@ -242,11 +241,11 @@ export class APIWrapper {
      *          false:The bulk call fails with the first request that fail. 
      *          true: The bulk call continue until each sub request is completed or failed.
      */
-    bulkCall(configs = [],continueWithFailure = false){
+    bulkCall(configs = [],continueWithFailure = false, onProgress = null){
         let invalidMethod = false;
         let invalidMethodInfo;
         let children = [];
-        let parent = this.getRequestObject({continueWithFailure:continueWithFailure});
+        let parent = this.getRequestObject({continueWithFailure:continueWithFailure,onProgress:onProgress});
 
         configs.forEach(c=>{
             let request = this.getRequestObject(c);
@@ -406,8 +405,7 @@ export class APIWrapper {
         }
 
         request.updateStatusBySubRequests();
-
-        //TODO update progress based on subrequest status
+        request.updateSubrequestsProgress();
 
         if(request.status == RequestObject.Status.failed || request.status == RequestObject.Status.completed){
             //Failed or completed
@@ -476,8 +474,13 @@ export class APIWrapper {
         }
     }
 
-    setAuthorization(token){
-        this.axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+    /**
+     * 
+     * @param {*} token 
+     * @param {*} type
+     */
+    setAuthorization(token, type = 'Bearer'){
+        this.axiosInstance.defaults.headers.common['Authorization'] = type + token;
     }
 
     getComputedPath(path){
