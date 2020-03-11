@@ -375,7 +375,7 @@ export class APIWrapper {
         } else {
             //Permanent failure
             request.status = RequestObject.Status.failed;
-            let result =  this.createResponse({ success:false, info:error.message, error:error });
+            let result =  this.createResponse(Object.assign(error.response || {} ,{ success:false, info:error.message, error:error }));
             this.requestCompletion(request, result)
         }
 
