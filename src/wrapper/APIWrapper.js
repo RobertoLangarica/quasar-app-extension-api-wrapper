@@ -480,7 +480,7 @@ export class APIWrapper {
      * @param {*} type
      */
     setAuthorization(token, type = 'Bearer'){
-        this.axiosInstance.defaults.headers.common['Authorization'] = type + token;
+        this.axiosInstance.defaults.headers.common['Authorization'] = `${type} ${token}`;
     }
 
     getComputedPath(path){
