@@ -6,11 +6,11 @@
  * API: https://github.com/quasarframework/quasar/blob/master/app/lib/app-extension/IndexAPI.js
  */
 
- import APIWrapper from './wrapper/APIWrapper'
+//  import APIWrapper from './wrapper/APIWrapper'
 
 module.exports = function (api) {
     
-    APIWrapper.baseURL = api.prompts.baseURL !==  '' ? api.prompts.baseURL : APIWrapper.baseURL;
+    // APIWrapper.baseURL = api.prompts.baseURL !==  '' ? api.prompts.baseURL : APIWrapper.baseURL;
 
     api.extendQuasarConf((conf, api) => {
     
