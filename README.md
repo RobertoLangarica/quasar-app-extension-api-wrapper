@@ -2,7 +2,7 @@
 # API Wrapper
 ===
 
-_An easy to use out of the box API wrapper tha use Axios  in its core_
+_An easy to use out of the box API wrapper tha use [axios](https://github.com/axios/axios)  in its core_
 
 > Note: The extension can be used as an `npm` package, using: [api-client-wrapper](https://www.npmjs.com/package/api-client-wrapper)
 
