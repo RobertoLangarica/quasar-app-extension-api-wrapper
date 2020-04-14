@@ -1,28 +1,28 @@
-## Quasar App Extension # API Wrapper
+# Quasar App Extension  **API Wrapper**
 ===
 
-_Be sure to change this readme as appropriate for your app extension._
+_An easy to use out of the box API wrapper tha use Axios  in is core_
 
-_Think about the organization of this file and how the information will be beneficial to the user._
+This extension was designed to wrapp up the most common implementations for an api client in an effort to stop rewriting the same code for a basic implementation.
 
-> Add a short description of your App Extension. What does it do? How is it beneficial? Why would someone want to use it?
+The features present in the extension are:
+- **Easy global access:** The extension came with a boot script that put a global _**$api **_ object available in the global scope of any component
+```javascript
+this.$api
+```
 
 # Install
 ```bash
-quasar ext add my-ext <- change name
+quasar ext add api-wrapper
 ```
 Quasar CLI will retrieve it from NPM and install the extension.
-
-## Prompts
-
-> If your app extension uses prompts, explain them here, otherwise remove this section.
 
 # Uninstall
 ```bash
 quasar ext remove my-ext <- change name
 ```
 
-# Info
+# How to use it
 > Add longer information here that will help the user of your app extension.
 
 # Other Info
