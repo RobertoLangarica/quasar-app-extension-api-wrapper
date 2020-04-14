@@ -1,4 +1,5 @@
-## Quasar App Extension  **API Wrapper**
+### Quasar App Extension  
+# API Wrapper
 ===
 
 _An easy to use out of the box API wrapper tha use Axios  in its core_
@@ -6,7 +7,7 @@ _An easy to use out of the box API wrapper tha use Axios  in its core_
 This extension was designed to wrapp up the most common implementations for an api client in an effort to stop rewriting the same code for a basic implementation.
 
 The features present in the extension are:
-- **Easy global access:** The extension came with a boot script that put a global _ **$api** _ object available in the global scope of any component
+- **Easy global access:** The extension came with a boot script that put a global _**$api**_ object available in the global scope of any component
 ```javascript
 this.$api
 ```
