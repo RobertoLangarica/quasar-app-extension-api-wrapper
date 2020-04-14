@@ -9,11 +9,11 @@ _An easy to use out of the box API wrapper tha use [axios](https://github.com/ax
 This extension was designed to wrap up the most common implementations for an api client in an effort to have a quick tool for each project.
 
 The present features in the extension are:
-1. **Easy global access:** The extension came with a boot script that put a global _**$api**_ object available at the global scope of any component
+1. **Easy global access:** The extension came with a boot script that put an _**$api**_ object available at global scope for any component
 ```javascript
 this.$api
 ```
-1. **Base API url:** The url tha it will be used as root for any call that contains a relative path `this.$api.baseURL`. **Note:** If a call contains a full path (one with http or https protocol) it will be called as is without _baseURL_ concatenation.
+1. **Base API url:** The url that will be used as a root for any call that contains a relative path `this.$api.baseURL`. **Note:** If a call contains a full path (one with http or https protocol) it will be called as is without _baseURL_ concatenation.
 
 1. **Homogeneous response:** Each request is a promise that resolve with an homogeneous response object: `{success:Boolean, attempts:int, data:Object, info:string, error:Error}`. For more details refer to the _Response Schema_ section on this readme.
 
