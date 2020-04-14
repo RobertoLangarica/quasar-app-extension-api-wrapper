@@ -19,7 +19,7 @@ module.exports = function (api) {
 
     // make sure boot file transpiles
     conf.build.transpileDependencies.push(/quasar-app-extension-api-wrapper[\\/]src[\\/]boot/)
-    conf.build.transpileDependencies.push(/quasar-app-extension-api-wrapper[\\/]src[\\/]wrapper/)
+    // conf.build.transpileDependencies.push(/quasar-app-extension-api-wrapper[\\/]src[\\/]wrapper/)
     // if boot file imports anything, make sure that
     // the regex above matches those files too!
   })

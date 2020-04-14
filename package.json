@@ -20,6 +20,6 @@
     "yarn": ">= 1.6.0"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "api-client-wrapper": "0.0.5"
   }
 }

@@ -1,12 +1,7 @@
-import api from '../wrapper/APIWrapper'
-import api_state from '../store/WrapperState'
+import api from 'api-client-wrapper'
 
 export default async ({ Vue, store }) => {
-    api.store = (store !== undefined && store !== null) ? store:undefined;
-
-    if(api.store){
-      api.store.registerModule('APIwrapper',api_state);
-    }
+    api.setStore(store)
 
     Vue.prototype.$api = api;
   }
