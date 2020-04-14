@@ -8,7 +8,7 @@ This extension was designed to wrapp up the most common implementations for an a
 
 The features present in the extension are:
 - **Easy global access:** The extension came with a boot script that put a global _**$api**_ object available in the global scope of any component
-```javascript
+> ```javascript
 this.$api
 ```
 
