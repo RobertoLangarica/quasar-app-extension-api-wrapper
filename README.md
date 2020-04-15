@@ -77,14 +77,14 @@ Note that each method has a final argument that is a custom configuration for th
 Each method has a bulk counterpart that allows for bulk calls
 
 ```javascript
-let result = await bulkGet(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
-let result = await bulkPost(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
-let result = await bulkPatch(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
-let result = await bulkPut(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
-let result = await bulkDelete(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
+let result = await this.$api.bulkGet(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
+let result = await this.$api.bulkPost(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
+let result = await this.$api.bulkPatch(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
+let result = await this.$api.bulkPut(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
+let result = await this.$api.bulkDelete(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
 
 //or the global method that allows bulk calls with different methods
-let result = await bulkCall([{configs}], continueWithFailure:Boolean, onProgress)
+let result = await this.$api.bulkCall([{configs}], continueWithFailure:Boolean, onProgress)
 ```
 #### Params:
 * **[paths or configs]:[]**-> An array containing the paths for each request or an array of request configuration objects (described next).
