@@ -1,7 +1,7 @@
 {
   "name": "quasar-app-extension-api-wrapper",
-  "version": "0.0.7",
-  "description": "A Quasar App Extension",
+  "version": "0.0.8",
+  "description": "A Quasar App Extension designed to wrap up the most common features of an api client implementation",
   "author": "Roberto <roberto.langarica@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
@@ -20,6 +20,6 @@
     "yarn": ">= 1.6.0"
   },
   "dependencies": {
-    "api-client-wrapper": ">= 0.0.8"
+    "api-client-wrapper": ">= 0.1.0"
   }
 }
