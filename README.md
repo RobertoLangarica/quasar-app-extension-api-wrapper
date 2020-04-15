@@ -39,7 +39,7 @@ Quasar CLI will retrieve it from NPM and install the extension.
 
 # Uninstall
 ```bash
-quasar ext remove my-ext <- change name
+quasar ext remove api-wrapper
 ```
 
 # How to use it
@@ -147,11 +147,11 @@ info:"",
 // The error instance present in the response (if there is one)
 error:null,
 
-// All the other data present in the [axios](https://github.com/axios/axios) response
+// All the other data present in the axios response
 ...
 }
 ```
-In the case of a bulk call the response _data_ is an array/Dictionary containing the response for each request (in the same order that the requests where passed)
+In the case of a bulk call the response _data_ is an Array containing the response for each request (in the same order that the requests where passed)
 
 ```javascript
 let result = await anyBulkCall([{configs}]
@@ -165,4 +165,32 @@ result.data.forEach(response=>{
 let result = await anyBulkCall([{alias:'a',...},{alias:'b',...}]
 console.log(result.data.a)
 console.log(result.data.b)
+```
+
+### Global Configuration
+
+Configuration of the overall behaviour for the extension
+
+```javascript
+// `baseURL` will be prepended to any path provided unless the provided path is absolute.
+this.$api.baseURL = '';
+
+// The amount of attempts a request will make in the case of a timeout before failing completely
+this.$api.maxAttemptsPerCall = 1;
+
+// The amount of concurrent requests that could be executed (when the requests number exceed this amount the requests are enqueue in a waiting mode)
+this.$api.simultaneousCalls = 5;
+
+// Specifies the number of milliseconds before a request times out
+this.$api.timeout = 10000;
+
+// Sets the default headers for 'Content-Type' for each request
+this.$api.setContentType(type = 'application/json')
+
+// Sets the default authorization header: 'Authorization' for each request
+this.$api.setAuthorization(token, type = 'Bearer')
+
+// If the store where not provided in the boot phase then it could be passed to the extension using this function
+// This will bring the module 'APIwrapper' available and the extension will start updating its state
+this.$api.setStore(vuex_instance)
 ```
