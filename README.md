@@ -49,7 +49,7 @@ quasar ext remove my-ext <- change name
 ```javascript
 let result = await this.$api.get('path');
 //or
-this.$api.get('path').then(result->{});
+this.$api.get('path').then(result=>{});
 ```
 
 ### Performing a `POST` request
@@ -57,7 +57,7 @@ this.$api.get('path').then(result->{});
 ```javascript
 let result = await this.$api.post('path', {data});
 //or
-this.$api.post('path', {data}).then(result->{});
+this.$api.post('path', {data}).then(result=>{});
 ```
 
 ### The supported methods are:
@@ -67,8 +67,11 @@ post(path='', data = {}, conf = {})
 patch(path='', data = {}, conf = {})
 put(path='', data = {}, conf = {})
 delete(path='', conf = {})
+
+//Or the global method that receive a request Configuration
+call({request configuration})
 ```
-Note that each method has a final argument that is a custom configuration for the request, this configuration takes precedence over the global configuration. For the supported properties please refer to the _Configuration_ section.
+Note that each method has a final argument that is a custom configuration for the request, this configuration takes precedence over the global configuration. For the supported properties please refer to the _Request Configuration_ section.
 
 ### Bulk calls
 Each method has a bulk counterpart that allows for bulk calls
@@ -84,6 +87,82 @@ let result = await bulkDelete(['paths' or {configs}], continueWithFailure:Boolea
 let result = await bulkCall([{configs}], continueWithFailure:Boolean, onProgress)
 ```
 #### Params:
-* **[paths or configs]:[]**-> An array containing the paths for each request or an array of configuration objects (described next).
+* **[paths or configs]:[]**-> An array containing the paths for each request or an array of request configuration objects (described next).
 * **continueWithFailure:Boolean**-> Optional with the default to _false_.  **`false`** The request will be considered failed when any of it subrequests fail and it will stop any further execution (there could be some sub-requests that never get executed if some other request failed before). **`true`** All the requests are executed, it doesn´t matter if some of them failed.
 * **onProgress:Function(progress:Number)**-> Is an optional callback that receives progress between [0-1], the progress is computed with the next formula: _(request-completed / total-amount-of-request-in-the-bulkCall)_
+
+### Request Configuration
+A configuration object for each request (with precedence over any global configuration) with the next scheme:
+```javascript
+{
+// Relative or absolute path for the call. Always needed except for when a path was already passed as an argument
+url:String,
+
+// The HTTP verb to be used for the request
+method:String,
+
+// the URL parameters to be sent with the request
+params:{},
+
+// Data to be sent as the request body
+data:{},
+
+// An alias to be added to the response of this request for better indentification with bulk calls
+alias:String,
+
+// Number of attemps for the request in case of timeout failure
+attempts:1,
+
+// Number of milliseconds before the request times out.
+timeout:10000
+
+// Any other property supported by axios configuration
+...
+}
+```
+
+It is possible to add any property supported by [axios](https://github.com/axios/axios) (like headers or encoding).
+
+### Response Scheme
+
+For any individual request the response schema is:
+```javascript
+{
+// Present only when an alias was passed in the config for the request
+alias:String,
+
+// true: when the status of the request is between [200-300) 
+// flase: for any status not in the range of 200's
+success:Boolean,
+
+// Number of attemps made by this request before being considered completed
+attempts:0,
+
+// Any data returned in the response or an array of responses in the case of a bulk call
+data:{}
+
+// The error message present when an error is returned with the response
+info:"",
+
+// The error instance present in the response (if there is one)
+error:null,
+
+// All the other data present in the [axios](https://github.com/axios/axios) response
+...
+}
+```
+In the case of a bulk call the response _data_ is an array/Dictionary containing the response for each request (in the same order that the requests where passed)
+
+```javascript
+let result = await anyBulkCall([{configs}]
+
+//Result data will contain an array of responses
+result.data.forEach(response=>{
+   console.log (response)
+})
+
+// If an alias where provided for any request then that request could be accessed with that alias
+let result = await anyBulkCall([{alias:'a',...},{alias:'b',...}]
+console.log(result.data.a)
+console.log(result.data.b)
+```
