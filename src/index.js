@@ -9,12 +9,12 @@
 //  import APIWrapper from './wrapper/APIWrapper'
 
 module.exports = function (api) {
-    
-    // APIWrapper.baseURL = api.prompts.baseURL !==  '' ? api.prompts.baseURL : APIWrapper.baseURL;
 
-    api.extendQuasarConf((conf, api) => {
-    
-      // make sure my-ext boot file is registered
+  // APIWrapper.baseURL = api.prompts.baseURL !==  '' ? api.prompts.baseURL : APIWrapper.baseURL;
+
+  api.extendQuasarConf((conf, api) => {
+
+    // make sure my-ext boot file is registered
     conf.boot.push('~quasar-app-extension-api-wrapper/src/boot/api-wrapper-bootfile.js')
 
     // make sure boot file transpiles
