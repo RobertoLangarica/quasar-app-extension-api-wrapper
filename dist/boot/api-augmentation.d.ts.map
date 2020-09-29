@@ -1,0 +1,1 @@
+{"version":3,"file":"api-augmentation.d.ts","sourceRoot":"","sources":["../../src/boot/api-augmentation.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,UAAU,EAAE,MAAM,oBAAoB,CAAA;AAE/C,OAAO,QAAQ,eAAe,CAAC;IAC3B,UAAU,GAAG;QACT,QAAQ,CAAC,IAAI,EAAE,UAAU,CAAC;KAC7B;CACJ"}

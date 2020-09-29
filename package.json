@@ -8,6 +8,7 @@
   "types": "dist/index.d.ts",
   "prepublish": "tsc",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"No test specified\" && exit 0"
   },
   "repository": {
@@ -24,5 +25,8 @@
   "dependencies": {
     "api-client-wrapper": "^0.2.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "vue": "^2.6.11",
+    "typescript": "^3.9.7"
+  }
 }

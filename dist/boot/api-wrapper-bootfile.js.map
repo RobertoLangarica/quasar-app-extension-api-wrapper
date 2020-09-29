@@ -1,0 +1,1 @@
+{"version":3,"file":"api-wrapper-bootfile.js","sourceRoot":"","sources":["../../src/boot/api-wrapper-bootfile.ts"],"names":[],"mappings":";;;;;;;;;AAAA,OAAO,GAAG,MAAM,oBAAoB,CAAA;AAEpC,eAAe,CAAO,EAAE,GAAG,EAAE,KAAK,EAAE,EAAE,EAAE;IACtC,GAAG,CAAC,QAAQ,CAAC,KAAK,CAAC,CAAA;IAEnB,GAAG,CAAC,SAAS,CAAC,IAAI,GAAG,GAAG,CAAC;AAC3B,CAAC,CAAA,CAAA"}
