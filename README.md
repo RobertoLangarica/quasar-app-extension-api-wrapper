@@ -9,7 +9,7 @@ _An easy to use out of the box API wrapper that use [axios](https://github.com/a
 This extension was designed to wrap up the most common features of an api client implementation, in an effort to have a quick and stable tool for each project.
 
 The present features in the extension are:
-1. **Easy global access:** The extension came with a boot script that put an _**$api**_ object available at global scope for any component: `this.$api`
+1. **Easy global access:** The extension came with a [Quasar boot script](https://quasar.dev/quasar-cli/boot-files#Anatomy-of-a-boot-file) that put an _**$api**_ object available at global scope for any Vue component as: `this.$api`. You can access the `$api` object from inside any Vue component. 
 
 1. **Base API url:** The url that will be used as a root for any call that contains a relative path `this.$api.baseURL`. **Note:** If a call contains a full path (one with http or https protocol) it will be called as is without _baseURL_ concatenation.
 
@@ -21,7 +21,7 @@ The present features in the extension are:
 
 1. **Masive requests:** There is out of the box support for bulk calls that allows multiple requests in a single call. for more information refer to the _How To use it_ section on this readme.
 
-1. **Vuex integration:** The extension came with Vuex store integration for state monitoring. During boot phase a module is registered to Vuex with the next information:
+1. **Vuex integration:** The extension came with Vuex store integration for state monitoring. During Quasar boot phase a module is registered to Vuex with the next information:
    1. Working: Indicating that is at least one request executing `this.$store.state.APIwrapper.working`
    1. Uploading: Indicating that is at least one request executing with a method different from `GET` `this.$store.state.APIwrapper.uploading`
    1. Downloading: Indicating that is at least one request executing with a method equal to `GET` `this.$store.state.APIwrapper.downloading`
@@ -47,6 +47,7 @@ quasar ext remove api-wrapper
 ### Performing a `GET` request
 
 ```javascript
+// Inside any Vue componente
 let result = await this.$api.get('path');
 //or
 this.$api.get('path').then(result=>{});
@@ -55,6 +56,7 @@ this.$api.get('path').then(result=>{});
 ### Performing a `POST` request
 
 ```javascript
+// Inside any Vue componente
 let result = await this.$api.post('path', {data});
 //or
 this.$api.post('path', {data}).then(result=>{});
@@ -62,21 +64,39 @@ this.$api.post('path', {data}).then(result=>{});
 
 ### The supported methods are:
 ```javascript
-get(path='', conf = {})
-post(path='', data = {}, conf = {})
-patch(path='', data = {}, conf = {})
-put(path='', data = {}, conf = {})
-delete(path='', conf = {})
+// Inside any Vue componente
+this.$api.get(path='', conf = {})
+this.$api.post(path='', data = {}, conf = {})
+this.$api.patch(path='', data = {}, conf = {})
+this.$api.put(path='', data = {}, conf = {})
+this.$api.delete(path='', conf = {})
 
-//Or the global method that receive a request Configuration
-call({request configuration})
+//Or the global method that receive a request Configuration (in most of the cases you will never need this method)
+this.$api.call({request configuration})
 ```
 Note that each method has a final argument that is a custom configuration for the request, this configuration takes precedence over the global configuration. For the supported properties please refer to the _Request Configuration_ section.
+
+### Use outside a Vue component
+You can use APIWrapper from outside a Vue component, this is common if you want to use it in a store module or inside any other js file Eg. A Quasar bootfile.
+```javascript
+// import the object
+import api from "api-client-wrapper"
+
+// Use any of the available methods
+api.get(path='', conf = {})
+api.post(path='', data = {}, conf = {})
+api.patch(path='', data = {}, conf = {})
+api.put(path='', data = {}, conf = {})
+api.delete(path='', conf = {})
+```
+**Important Note:** You are still referencing the same object that you use inside any Vue component, so if you make any configuration it will affect any other place where you were using it, and the same goes in viceversa, any previous configuration made will take effect.
+
 
 ### Bulk calls
 Each method has a bulk counterpart that allows for bulk calls
 
 ```javascript
+// Inside any Vue componente
 let result = await this.$api.bulkGet(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
 let result = await this.$api.bulkPost(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
 let result = await this.$api.bulkPatch(['paths' or {configs}], continueWithFailure:Boolean, onProgress)
@@ -92,7 +112,7 @@ let result = await this.$api.bulkCall([{configs}], continueWithFailure:Boolean, 
 * **onProgress:Function(progress:Number)**-> Is an optional callback that receives progress between [0-1], the progress is computed with the next formula: _(request-completed / total-amount-of-request-in-the-bulkCall)_
 
 ### Request Configuration
-A configuration object for each request (with precedence over any global configuration) with the next scheme:
+A configuration object for each request, which have precedence over any global configuration (so it is a way to override any global configuration for special scenarios) It has the next scheme:
 ```javascript
 {
 // Relative or absolute path for the call. Always needed except for when a path was already passed as an argument
@@ -169,28 +189,32 @@ console.log(result.data.b)
 
 ### Global Configuration
 
-Configuration of the overall behaviour for the extension
+Configuration of the overall behaviour for the extension.
+
+*Note:* The configuration could be made outside of a Vue component: See the: [Use outside a Vue component](#use-outside-a-vue-component)
 
 ```javascript
+// Inside any Vue componente
+
 // `baseURL` will be prepended to any path provided unless the provided path is absolute.
-this.$api.baseURL = '';
+this.$api.baseURL = ''; // Empty string is the default
 
 // The amount of attempts a request will make in the case of a timeout before failing completely
-this.$api.maxAttemptsPerCall = 1;
+this.$api.maxAttemptsPerCall = 1; // 1 is the default
 
 // The amount of concurrent requests that could be executed (when the requests number exceed this amount the requests are enqueue in a waiting mode)
-this.$api.simultaneousCalls = 5;
+this.$api.simultaneousCalls = 5; // 5 is the default
 
 // Specifies the number of milliseconds before a request times out
-this.$api.timeout = 10000;
+this.$api.timeout = 10000; // 10000 is the default
 
 // Sets the default headers for 'Content-Type' for each request
-this.$api.setContentType(type = 'application/json')
+this.$api.setContentType('application/json') // 'application/json' is the default
 
 // Sets the default authorization header: 'Authorization' for each request
-this.$api.setAuthorization(token, type = 'Bearer')
+this.$api.setAuthorization('token', 'Bearer') // The default is not to have any Authorization header
 
-// If the store where not provided in the boot phase then it could be passed to the extension using this function
+// If the store where not provided in the Quasar boot phase then it could be assigned to the extension using the next function
 // This will bring the module 'APIwrapper' available and the extension will start updating its state
-this.$api.setStore(vuex_instance)
+this.$api.setStore(vuex_instance) // vuex_instance should be a valid Vuex instance
 ```
